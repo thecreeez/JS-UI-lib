@@ -1,13 +1,12 @@
 class UIElement {
-    constructor({state, pos, onhover, onclick, isActive, isRender, layer}) {
-        this._state = state;
+    constructor( { manager, pos, onHover, onClick, isActive, isRender } ) {
+        this._manager = manager;
         this._pos = pos;
-        this.onhover = onhover;
-        this.onclick = onclick;
+        this.onHover = onHover;
+        this.onHover = onClick;
 
         this.isActive = isActive;
         this.isRender = isRender;
-        this.layer = layer;
 
         this.isHover = false;
         this.isClicked = false;
@@ -75,11 +74,11 @@ class UIElement {
         this.animationState = 0;
     }
 
-    getState() {
-        return this._state;
+    getManager() {
+        return this._manager;
     }
 
     isSelected() {
-        return this == this.getState().getSelectedUI()
+        return this == this.getManager().getSelectedUI()
     }
 }

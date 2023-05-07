@@ -3,42 +3,39 @@ class UIButton extends UIElement {
         return 200;
     }
 
-    constructor({state, pos, text, onClick, isActive, isRender, layer}) {
+    constructor( { manager, pos, text, onClick, isActive, isRender } ) {
         super({
-            state: state,
+            manager: manager,
             pos: pos,
-            onclick: onClick,
-            layer: layer,
-            isRender: isRender,
-            isActive: isActive
+            onClick: onClick,
+            isActive: isActive,
+            isRender: isRender
         })
 
         this._text = text;
-        this._defaultFontSize = 30;
+        this._defaultFontSize = 15;
     }
 
-    static createDefault({state, pos, text, layer, onClick}) {
+    static createDefault({ manager, pos, text, onClick}) {
         return new UIButton({
-            state: state,
+            manager: manager,
             isActive: true,
             isRender: true,
-            layer: layer,
             onClick: onClick,
             pos: pos,
             text: text
         })
     }
 
-    render() {
-        ctx.font = this._defaultFontSize + "px arial";
+    render(canvas, ctx) {
+        this._manager.setFont(this._defaultFontSize, "arial");
+        this._manager.setFillColor(this._getColor())
 
         let buttonWidth = ctx.measureText(this._text).width * 1.5;
         let buttonHeight = this._defaultFontSize * 1.3;
 
         if (buttonWidth < UIButton.getMinWidth())
             buttonWidth = UIButton.getMinWidth();
-
-        this._setColor();
 
         let posOffset = [0,0];
 
@@ -63,13 +60,13 @@ class UIButton extends UIElement {
         return [buttonWidth, buttonHeight];
     }
 
-    _setColor() {
+    _getColor() {
         let r = HUD_COLORS.BUTTON_INACTIVE[0];
         let g = HUD_COLORS.BUTTON_INACTIVE[1];
         let b = HUD_COLORS.BUTTON_INACTIVE[2];
 
         if (!this.isActive)
-            return ctx.fillStyle = `rgb(${r},${g},${b})`;
+            return `rgb(${r},${g},${b})`;
 
         if (this.isHover) {
             r = HUD_COLORS.BUTTON_HOVER[0] - HUD_COLORS.BUTTON_DEFAULT[0] * (1-this.animationState);
@@ -81,6 +78,6 @@ class UIButton extends UIElement {
             b = HUD_COLORS.BUTTON_DEFAULT[2] + HUD_COLORS.BUTTON_HOVER[2] * (1-this.animationState);
         }
 
-        return ctx.fillStyle = `rgb(${r},${g},${b})`;
+        return `rgb(${r},${g},${b})`;
     }
 }

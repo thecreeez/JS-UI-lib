@@ -7,8 +7,13 @@ class UIManager {
     static font = "arial";
     static fontSize = 15;
 
-    constructor() {
+    constructor(canvas) {
         this._elements = new Map();
+
+        this._canvas = canvas;
+        this._ctx = canvas.getContext("2d");
+
+        this._lastUpdate = Date.now();
     }
 
     addElement(id, element) {
@@ -31,11 +36,17 @@ class UIManager {
     }
 
     render() {
-
+        for (let element of this._elements) {
+            element.render(this._canvas, this._ctx);
+        }
     }
 
     update() {
+        let deltaTime = Date.now() - this._lastUpdate;
 
+        for (let element of this._elements) {
+            element.update(deltaTime);
+        }
     }
 
     error(message) {
