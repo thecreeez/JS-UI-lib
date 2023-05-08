@@ -4,11 +4,12 @@ class UIManager {
     static SliderMinWidth = 200;
     static TextInputMinWidth = 200;
 
-    static font = "arial";
+    static font = "Lato";
     static fontSize = 15;
 
     constructor(canvas) {
         this._elements = new Map();
+        this._selected = null;
 
         this._canvas = canvas;
         this._ctx = canvas.getContext("2d");
@@ -44,11 +45,14 @@ class UIManager {
     }
 
     update() {
-        let deltaTime = Date.now() - this._lastUpdate;
+        let currentTime = Date.now();
+        let deltaTime = currentTime - this._lastUpdate;
 
         for (let element of this._elements) {
             element[1].update(deltaTime);
         }
+
+        this._lastUpdate = currentTime;
     }
 
     error(message) {
@@ -61,6 +65,14 @@ class UIManager {
 
     setFillColor(color) {
         this._ctx.fillStyle = color;
+    }
+
+    setSelectedElem(elem) {
+        this._selected = elem;
+    }
+
+    getSelectedElem() {
+        return this._selected;
     }
 
     onmousedown(pos) {

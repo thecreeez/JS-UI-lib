@@ -1,41 +1,38 @@
 class UISlider extends UIElement {
+    static EMPTY_COLOR = [0, 0, 51];
+    static FULL_COLOR = [0, 51, 204];
+
     static getMinWidth() {
         return 200;
     }
 
-    constructor({ state, pos, text, isActive, isRender, layer, min, max, value }) {
+    constructor({ manager, pos, text, isActive, isRender, min, max, value }) {
         super({
-            state: state,
+            manager: manager,
             pos: pos,
-            onclick: (elem) => {
-                console.log(elem)
-            },
-            layer: layer,
             isRender: isRender,
             isActive: isActive
         })
 
         this.value = value;
-        this._text = text;
-        this._defaultFontSize = 20;
-        this._defaultWidth = UISlider.getMinWidth();
-
         this.min = min;
         this.max = max;
 
-        this.onclick = (elem) => {
-            elem.getState().setSelectedUI(elem);
+        this._text = text;
+        this._defaultFontSize = 20;
+
+        this.onClick = (elem) => {
+            elem.getManager().setSelectedElem(elem);
         }
 
         this.type = "input";
     }
 
-    static createDefault({ state, pos, text, layer, min, max, value }) {
+    static createDefault({ manager, pos, text, min, max, value }) {
         return new UISlider({
-            state: state,
+            manager: manager,
             pos: pos,
             text: text,
-            layer: layer,
             isActive: true,
             isRender: true,
             min: min,
@@ -44,16 +41,15 @@ class UISlider extends UIElement {
         })
     }
 
-    render() {
-        ctx.font = this._defaultFontSize + "px arial";
+    render(canvas, ctx) {
+        this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
+        let size = this._getSize(ctx);
 
-        let size = this._getSize();
-
-        ctx.fillStyle = `rgb(${HUD_COLORS.SLIDER_BACKGROUND[0]},${HUD_COLORS.SLIDER_BACKGROUND[1]},${HUD_COLORS.SLIDER_BACKGROUND[2]})`;
+        ctx.fillStyle = `rgb(${UISlider.EMPTY_COLOR[0]},${UISlider.EMPTY_COLOR[1]},${UISlider.EMPTY_COLOR[2]})`;
 
         ctx.fillRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1]);
 
-        ctx.fillStyle = `rgb(${HUD_COLORS.SLIDER_FOREGROUND[0]},${HUD_COLORS.SLIDER_FOREGROUND[1]},${HUD_COLORS.SLIDER_FOREGROUND[2]})`;
+        ctx.fillStyle = `rgb(${UISlider.FULL_COLOR[0]},${UISlider.FULL_COLOR[1]},${UISlider.FULL_COLOR[2]})`;
         ctx.fillRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0] * this.getValueOffset(), size[1]);
 
         ctx.fillStyle = `white`;
@@ -64,11 +60,11 @@ class UISlider extends UIElement {
             ctx.fillText(Math.round(this.value * 100) / 100, this._pos[0] - size[0] / 2 + size[0] * this.getValueOffset() - this._defaultFontSize / 2   , this._pos[1] - size[1] - 5);
     }
 
-    update() {
-        super.update();
+    update(deltaTime) {
+        super.update(deltaTime);
 
         if (!this.isClicked && this.isSelected())
-            this.getState().setSelectedUI(null)
+            this.getManager().setSelectedElem(null)
     }
 
     checkHover(pos) {
@@ -76,8 +72,6 @@ class UISlider extends UIElement {
             let size = this._getSize();
 
             let startWidth = (this._pos[0] - size[0] / 2);
-
-            console.log(startWidth)
 
             if (pos[0] - startWidth < 0) {
                 this.value = this.min;
@@ -91,7 +85,7 @@ class UISlider extends UIElement {
                 return;
             }
 
-            this.value = this.min + (proportion * this.max);
+            this.value = (proportion * this.max);
         }
     }
 
@@ -107,11 +101,7 @@ class UISlider extends UIElement {
         return this.value;
     }
 
-    _getSize() {
-        ctx.font = this._defaultFontSize + "px arial";
-
-        let textInputWidth = this._defaultFontSize * 1.3;
-
-        return [this._defaultWidth, 10];
+    _getSize(ctx) {
+        return [UISlider.getMinWidth(), 10];
     }
 }

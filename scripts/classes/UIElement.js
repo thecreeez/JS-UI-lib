@@ -18,9 +18,9 @@ class UIElement {
 
     }
 
-    update() {
+    update(deltaTime) {
         if (this.animationState < 1)
-            this.animationState+=0.15;
+            this.animationState += 0.01 * deltaTime;
     }
 
     checkHover(pos, ctx) {
@@ -79,6 +79,6 @@ class UIElement {
     }
 
     isSelected() {
-        return this == this.getManager().getSelectedUI()
+        return this == this.getManager().getSelectedElem()
     }
 }
