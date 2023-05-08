@@ -21,6 +21,10 @@ class UIElement {
     update(deltaTime) {
         if (this.animationState < 1)
             this.animationState += 0.01 * deltaTime;
+
+        if (this.animationState > 1) {
+            this.animationState = 1;
+        }
     }
 
     checkHover(pos, ctx) {

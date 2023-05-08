@@ -1,70 +1,84 @@
 class UITextInput extends UIElement {
+    static BACKGROUND = [200, 200, 200];
+    static ACTIVE_STROKE = [0, 51, 204];
+
     static getMinWidth() {
         return 200;
     }
 
-    constructor({ state, pos, placeholder, onClick, isActive, isRender, layer, maxSymbols, blackList, whiteList }) {
+    constructor({ manager, pos, placeholder, isActive, isRender, maxSymbols, blackList, whiteList, value }) {
         super({
-            state: state,
+            manager: manager,
             pos: pos,
-            onclick: onClick,
-            layer: layer,
             isRender: isRender,
             isActive: isActive
         })
 
-        this.value = "";
+        this.value = value;
         this._placeholder = placeholder;
-        this._defaultFontSize = 30;
+        this._defaultFontSize = 15;
         this._defaultWidth = UITextInput.getMinWidth();
 
         this.maxSymbols = maxSymbols;
         this.blackList = blackList;
         this.whiteList = whiteList;
 
-        this.onclick = (elem) => {
-            elem.getState().setSelectedUI(elem);
+        this.onClick = (elem) => {
+            elem.getManager().setSelectedElem(elem);
         }
 
         this.type = "input"
     }
 
-    static createDefault({ state, pos, placeholder, layer, maxSymbols, blackList, whiteList }) {
+    static createDefault({ manager, pos, placeholder, maxSymbols, blackList, whiteList }) {
         return new UITextInput({
-            state: state,
+            manager: manager,
             pos: pos,
             placeholder: placeholder,
-            layer: layer,
             isActive: true,
             isRender: true,
             maxSymbols: maxSymbols,
             blackList: blackList,
-            whiteList: whiteList
+            whiteList: whiteList,
+            value: ""
         })
     }
 
-    render() {
+    render(canvas, ctx) {
         ctx.font = this._defaultFontSize + "px arial";
 
         let size = this._getSize();
-
-        ctx.fillStyle = `rgb(${HUD_COLORS.TEXTINPUT_BACKGROUND[0]},${HUD_COLORS.TEXTINPUT_BACKGROUND[1]},${HUD_COLORS.TEXTINPUT_BACKGROUND[2]})`;
+        this._manager.setFillColor(this._getColor())
 
         ctx.fillRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1]);
 
         if (this.isHover || this.isSelected()) {
-            ctx.strokeStyle = `rgb(${HUD_COLORS.TEXTINPUT_HOVER_STROKE[0]},${HUD_COLORS.TEXTINPUT_HOVER_STROKE[1]},${HUD_COLORS.TEXTINPUT_HOVER_STROKE[2]})`
-            ctx.lineWidth = 5
-            ctx.strokeRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1])
+            this.renderSelected(ctx);
         }
 
         if (this.value.length < 1) {
-            ctx.fillStyle = "rgba(0,0,0,0.5)";
+            this._manager.setFillColor("rgba(0,0,0,0.5)");
             ctx.fillText(this._placeholder, this._pos[0] - size[0] / 2 + 5, this._pos[1] - this._defaultFontSize * 0.3);
         } else {
-            ctx.fillStyle = "rgba(0,0,0,1)";
+            this._manager.setFillColor("rgba(0,0,0,1)");
             ctx.fillText(this.value, this._pos[0] - size[0] / 2 + 5, this._pos[1] - this._defaultFontSize * 0.3);
         }
+    }
+
+    renderSelected(ctx) {
+        let size = this._getSize();
+
+        this._manager.setStrokeColor(this._getStrokeColor());
+        this._manager.setStrokeWidth(3 * this.animationState);
+        ctx.strokeRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1])
+    }
+
+    _getColor() {
+        return `rgb(${UITextInput.BACKGROUND[0]},${UITextInput.BACKGROUND[1]},${UITextInput.BACKGROUND[2]})`
+    }
+
+    _getStrokeColor() {
+        return `rgb(${UITextInput.ACTIVE_STROKE[0]},${UITextInput.ACTIVE_STROKE[1]},${UITextInput.ACTIVE_STROKE[2]})`
     }
 
     setValue(value) {
@@ -102,11 +116,9 @@ class UITextInput extends UIElement {
     }
 
     _getSize() {
-        ctx.font = this._defaultFontSize + "px arial";
-
         let textInputWidth = this._defaultFontSize * 1.3;
 
-        return [this._defaultWidth, textInputWidth];
+        return [UITextInput.getMinWidth(), textInputWidth];
     }
 
     isWhitelistEnabled() {
@@ -129,5 +141,29 @@ class UITextInput extends UIElement {
 
     isInWhiteList(symb) {
         return true;
+    }
+
+    onkeydown(key, code) {
+        if (code == "Backspace" && this.value.length > 0) {
+            this.value = this.value.slice(0, this.value.length - 1)
+        }
+
+        if (this.isBlacklistEnabled() && this.isInBlackList(key)) {
+            return false;
+        }
+
+        if (this.isWhitelistEnabled() && !this.isInWhiteList(key)) {
+            return false;
+        }
+
+        if (this.maxSymbols <= this.value.length) {
+            return false;
+        }
+
+        if (key.length > 1) {
+            return false;
+        }
+
+        this.value += key;
     }
 }

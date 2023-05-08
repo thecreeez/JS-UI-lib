@@ -30,8 +30,18 @@ function start() {
         pos: [250, 200],
         text: "test slider",
         min: 0,
-        value: 0,
-        max: 9999
+        value: 5,
+        max: 10
+    }))
+
+    UIManagerInstance.addElement("TextInput", new UITextInput({
+        manager: UIManagerInstance,
+        isActive: true,
+        isRender: true,
+        pos: [250, 300],
+        placeholder: "Test TI",
+        maxSymbols: 5,
+        value: "123",
     }))
 
     document.querySelector("canvas").onmousemove = (e) => {
@@ -45,6 +55,10 @@ function start() {
     document.querySelector("canvas").onmouseup = (e) => {
         UIManagerInstance.onmouseup([e.clientX, e.clientY]);
     }
+
+    window.onkeydown = (e) => {
+        UIManagerInstance.onkeydown(e.key, e.code)
+    }
 }
 
 function update() {
@@ -54,7 +68,7 @@ function update() {
 
     UIManagerInstance.update();
 
-    UIManagerInstance.getElement("Slider").setValue(ticks % 9999);
+    //UIManagerInstance.getElement("Slider").setValue(ticks % 9999);
 
     UIManagerInstance.render();
 
@@ -62,6 +76,5 @@ function update() {
 }
 
 let HUD_COLORS = {
-    TEXTINPUT_BACKGROUND: [200, 200, 200],
-    TEXTINPUT_HOVER_STROKE: [0, 51, 204],
+    
 }

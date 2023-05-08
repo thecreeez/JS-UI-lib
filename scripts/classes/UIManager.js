@@ -67,6 +67,14 @@ class UIManager {
         this._ctx.fillStyle = color;
     }
 
+    setStrokeColor(color) {
+        this._ctx.strokeStyle = color;
+    }
+
+    setStrokeWidth(width) {
+        this._ctx.lineWidth = width;
+    }
+
     setSelectedElem(elem) {
         this._selected = elem;
     }
@@ -76,6 +84,8 @@ class UIManager {
     }
 
     onmousedown(pos) {
+        this.setSelectedElem(null);
+
         for (let element of this._elements) {
             element[1].checkClick(pos, this._ctx);
         }
@@ -91,5 +101,10 @@ class UIManager {
         for (let element of this._elements) {
             element[1].checkHover(pos, this._ctx);
         }
+    }
+
+    onkeydown(key, code) {
+        if (this.getSelectedElem() && this.getSelectedElem().onkeydown)
+            this.getSelectedElem().onkeydown(key, code)
     }
 }
