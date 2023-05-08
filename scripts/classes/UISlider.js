@@ -42,6 +42,9 @@ class UISlider extends UIElement {
     }
 
     render(canvas, ctx) {
+        if (!this.isRender)
+            return;
+
         this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
         let size = this._getSize(ctx);
 
@@ -78,23 +81,34 @@ class UISlider extends UIElement {
                 return;
             }
             
-            let proportion = (pos[0] - startWidth) / size[0];
+            let valueOffset = (pos[0] - startWidth) / size[0];
 
-            if (proportion > 1) {
+            if (valueOffset > 1) {
                 this.value = this.max;
                 return;
             }
 
-            this.value = (proportion * this.max);
+            this.value = valueOffset * (this.max - this.min) + this.min;
         }
     }
 
+    // valueOffset == (this.value - this.min) / (this.max - this.min)
+    // value = 
+
+    //(this.value - this.min) / (this.max - this.min)
+
     getValueOffset() {
-        return this.value / this.max;
+        return (this.value - this.min) / (this.max - this.min);
     }
 
     setValue(value) {
         this.value = value;
+
+        if (this.value > this.max)
+            this.value = this.max;
+
+        if (this.value < this.min)
+            this.value = this.min;
     }
 
     getValue() {

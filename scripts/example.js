@@ -12,15 +12,26 @@ let ticks = 0;
 const UIManagerInstance = new UIManager(document.querySelector("canvas"));
 
 function start() {
-    UIManagerInstance.addElement("Button", new UIButton({
+    UIManagerInstance.addElement("ButtonMinus", new UIButton({
         manager: UIManagerInstance,
         isActive: true,
         isRender: true,
         onClick: (elem) => {
-            console.log(123);
+            elem.getManager().getElement("Slider").setValue(elem.getManager().getElement("Slider").getValue() - 1);
         },
-        pos: [250,100],
-        text: "test button"
+        pos: [150, 225],
+        text: "-1"
+    }))
+
+    UIManagerInstance.addElement("ButtonPlus", new UIButton({
+        manager: UIManagerInstance,
+        isActive: true,
+        isRender: true,
+        onClick: (elem) => {
+            elem.getManager().getElement("Slider").setValue(elem.getManager().getElement("Slider").getValue() + 1);
+        },
+        pos: [350,225],
+        text: "+1"
     }))
 
     UIManagerInstance.addElement("Slider", new UISlider({
@@ -29,15 +40,15 @@ function start() {
         isRender: true,
         pos: [250, 200],
         text: "test slider",
-        min: 0,
+        min: -30,
         value: 0,
-        max: 200
+        max: 30
     }))
 
     UIManagerInstance.addElement("SliderHeight", new UISlider({
         manager: UIManagerInstance,
         isActive: false,
-        isRender: true,
+        isRender: false,
         pos: [750, 200],
         text: "test slider",
         min: 0,
