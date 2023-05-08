@@ -14,6 +14,8 @@ class UIManager {
         this._ctx = canvas.getContext("2d");
 
         this._lastUpdate = Date.now();
+
+        this.defaultFont = "arial";
     }
 
     addElement(id, element) {
@@ -37,7 +39,7 @@ class UIManager {
 
     render() {
         for (let element of this._elements) {
-            element.render(this._canvas, this._ctx);
+            element[1].render(this._canvas, this._ctx);
         }
     }
 
@@ -45,11 +47,19 @@ class UIManager {
         let deltaTime = Date.now() - this._lastUpdate;
 
         for (let element of this._elements) {
-            element.update(deltaTime);
+            element[1].update(deltaTime);
         }
     }
 
     error(message) {
         console.error("UIManager",message);
+    }
+
+    setFont(size, font) {
+        this._ctx.font = size+"px "+font;
+    }
+
+    setFillColor(color) {
+        this._ctx.fillStyle = color;
     }
 }

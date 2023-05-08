@@ -1,4 +1,8 @@
 class UIButton extends UIElement {
+    static FILL_DEFAULT = [0, 0, 51];
+    static FILL_HOVER = [0, 51, 204];
+    static FILL_INACTIVE = [0, 0, 20];
+
     static getMinWidth() {
         return 200;
     }
@@ -28,7 +32,7 @@ class UIButton extends UIElement {
     }
 
     render(canvas, ctx) {
-        this._manager.setFont(this._defaultFontSize, "arial");
+        this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
         this._manager.setFillColor(this._getColor())
 
         let buttonWidth = ctx.measureText(this._text).width * 1.5;
@@ -61,21 +65,21 @@ class UIButton extends UIElement {
     }
 
     _getColor() {
-        let r = HUD_COLORS.BUTTON_INACTIVE[0];
-        let g = HUD_COLORS.BUTTON_INACTIVE[1];
-        let b = HUD_COLORS.BUTTON_INACTIVE[2];
+        let r = UIButton.FILL_INACTIVE[0];
+        let g = UIButton.FILL_INACTIVE[1];
+        let b = UIButton.FILL_INACTIVE[2];
 
         if (!this.isActive)
             return `rgb(${r},${g},${b})`;
 
         if (this.isHover) {
-            r = HUD_COLORS.BUTTON_HOVER[0] - HUD_COLORS.BUTTON_DEFAULT[0] * (1-this.animationState);
-            g = HUD_COLORS.BUTTON_HOVER[1] - HUD_COLORS.BUTTON_DEFAULT[1] * (1-this.animationState);
-            b = HUD_COLORS.BUTTON_HOVER[2] - HUD_COLORS.BUTTON_DEFAULT[2] * (1-this.animationState);
+            r = UIButton.FILL_HOVER[0] - UIButton.FILL_DEFAULT[0] * (1-this.animationState);
+            g = UIButton.FILL_HOVER[1] - UIButton.FILL_DEFAULT[1] * (1-this.animationState);
+            b = UIButton.FILL_HOVER[2] - UIButton.FILL_DEFAULT[2] * (1-this.animationState);
         } else {
-            r = HUD_COLORS.BUTTON_DEFAULT[0] + HUD_COLORS.BUTTON_HOVER[0] * (1-this.animationState);
-            g = HUD_COLORS.BUTTON_DEFAULT[1] + HUD_COLORS.BUTTON_HOVER[1] * (1-this.animationState);
-            b = HUD_COLORS.BUTTON_DEFAULT[2] + HUD_COLORS.BUTTON_HOVER[2] * (1-this.animationState);
+            r = UIButton.FILL_DEFAULT[0] + UIButton.FILL_HOVER[0] * (1-this.animationState);
+            g = UIButton.FILL_DEFAULT[1] + UIButton.FILL_HOVER[1] * (1-this.animationState);
+            b = UIButton.FILL_DEFAULT[2] + UIButton.FILL_HOVER[2] * (1-this.animationState);
         }
 
         return `rgb(${r},${g},${b})`;
