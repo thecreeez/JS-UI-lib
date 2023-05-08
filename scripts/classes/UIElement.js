@@ -3,7 +3,7 @@ class UIElement {
         this._manager = manager;
         this._pos = pos;
         this.onHover = onHover;
-        this.onHover = onClick;
+        this.onClick = onClick;
 
         this.isActive = isActive;
         this.isRender = isRender;
@@ -23,11 +23,11 @@ class UIElement {
             this.animationState+=0.15;
     }
 
-    checkHover(pos) {
+    checkHover(pos, ctx) {
         if (!this.isActive)
             return this.isHover = false;
 
-        if (this.isInCollision(pos)) {
+        if (this.isInCollision(pos, ctx)) {
             if (!this.isHover)
                 this.animationState = 0;   
 
@@ -38,21 +38,21 @@ class UIElement {
         }
     }
 
-    checkClick(pos) {
-        if (!this.isActive || !this.onclick)
+    checkClick(pos, ctx) {
+        if (!this.isActive || !this.onClick)
             return false;
 
-        if (this.isInCollision(pos)) {
-            this.onclick(this);
+        if (this.isInCollision(pos, ctx)) {
+            this.onClick(this);
             this.isClicked = true;
         }
     }
 
-    isInCollision(pos) {
+    isInCollision(pos, ctx) {
         if (!this._getSize)
             return false;
 
-        let size = this._getSize();
+        let size = this._getSize(ctx);
 
         if (this._pos[0] - size[0] / 2 > pos[0])
             return false;

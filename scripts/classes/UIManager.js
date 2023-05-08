@@ -62,4 +62,22 @@ class UIManager {
     setFillColor(color) {
         this._ctx.fillStyle = color;
     }
+
+    onmousedown(pos) {
+        for (let element of this._elements) {
+            element[1].checkClick(pos, this._ctx);
+        }
+    }
+
+    onmouseup(pos) {
+        for (let element of this._elements) {
+            element[1].isClicked = false;
+        }
+    }
+
+    onmousemove(pos) {
+        for (let element of this._elements) {
+            element[1].checkHover(pos, this._ctx);
+        }
+    }
 }

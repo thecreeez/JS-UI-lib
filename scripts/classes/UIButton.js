@@ -52,8 +52,8 @@ class UIButton extends UIElement {
         ctx.fillText(this._text, this._pos[0] - ctx.measureText(this._text).width / 2 + posOffset[0], this._pos[1] - this._defaultFontSize * 0.3 + posOffset[1]);
     }
 
-    _getSize() {
-        ctx.font = this._defaultFontSize + "px arial";
+    _getSize(ctx) {
+        this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
 
         let buttonWidth = ctx.measureText(this._text).width * 1.5;
         let buttonHeight = this._defaultFontSize * 1.3;

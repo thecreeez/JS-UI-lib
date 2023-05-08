@@ -20,9 +20,23 @@ function start() {
         pos: [250,20],
         text: "test button"
     }))
+
+    document.querySelector("canvas").onmousemove = (e) => {
+        UIManagerInstance.onmousemove([e.clientX, e.clientY]);
+    }
+
+    document.querySelector("canvas").onmousedown = (e) => {
+        UIManagerInstance.onmousedown([e.clientX, e.clientY]);
+    }
+
+    document.querySelector("canvas").onmouseup = (e) => {
+        UIManagerInstance.onmouseup([e.clientX, e.clientY]);
+    }
 }
 
 function update() {
+    document.querySelector("canvas").getContext("2d").clearRect(0, 0, document.querySelector("canvas").width, document.querySelector("canvas").height)
+
     UIManagerInstance.update();
     UIManagerInstance.render();
 }
