@@ -31,25 +31,26 @@ class UIButton extends UIElement {
         })
     }
 
-    render(canvas, ctx) {
+    render({ ctx, pos }) {
         this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
         this._manager.setFillColor(this._getColor())
 
-        let buttonWidth = ctx.measureText(this._text).width * 1.5;
-        let buttonHeight = this._defaultFontSize * 1.3;
+        let size = this._getSize(ctx);
 
-        if (buttonWidth < UIButton.getMinWidth())
-            buttonWidth = UIButton.getMinWidth();
+        let renderingPos = this._pos;
+
+        if (pos)
+            renderingPos = pos;
 
         let posOffset = [0,0];
 
         if (this.isClicked)
             posOffset[1] += 5;
 
-        ctx.fillRect(this._pos[0] - buttonWidth / 2 + posOffset[0], this._pos[1] - buttonHeight + posOffset[1], buttonWidth, buttonHeight);
+        ctx.fillRect(renderingPos[0] - size[0] / 2 + posOffset[0], renderingPos[1] - size[1] + posOffset[1], size[0], size[1]);
 
         ctx.fillStyle = "white";
-        ctx.fillText(this._text, this._pos[0] - ctx.measureText(this._text).width / 2 + posOffset[0], this._pos[1] - this._defaultFontSize * 0.3 + posOffset[1]);
+        ctx.fillText(this._text, renderingPos[0] - ctx.measureText(this._text).width / 2 + posOffset[0], renderingPos[1] - this._defaultFontSize * 0.3 + posOffset[1]);
     }
 
     _getSize(ctx) {

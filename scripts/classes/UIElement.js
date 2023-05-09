@@ -32,8 +32,10 @@ class UIElement {
             return this.isHover = false;
 
         if (this.isInCollision(pos, ctx)) {
-            if (!this.isHover)
-                this.animationState = 0;   
+            if (!this.isHover) {
+                this.animationState = 0;
+                this.onHover(this, pos);
+            }
 
             this.isHover = true;
         } else if (this.isHover) {
@@ -47,7 +49,7 @@ class UIElement {
             return false;
 
         if (this.isInCollision(pos, ctx)) {
-            this.onClick(this);
+            this.onClick(this, pos);
             this.isClicked = true;
         }
     }

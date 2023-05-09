@@ -5,14 +5,14 @@ window.onload = () => {
 }
 
 document.querySelector("canvas").width = 1000;
-document.querySelector("canvas").height = 500;
+document.querySelector("canvas").height = 800;
 
 let ticks = 0;
 
 const UIManagerInstance = new UIManager(document.querySelector("canvas"));
 
 function start() {
-    UIManagerInstance.addElement("ButtonMinus", new UIButton({
+    /*UIManagerInstance.addElement("ButtonMinus", new UIButton({
         manager: UIManagerInstance,
         isActive: true,
         isRender: true,
@@ -45,17 +45,6 @@ function start() {
         max: 30
     }))
 
-    UIManagerInstance.addElement("SliderHeight", new UISlider({
-        manager: UIManagerInstance,
-        isActive: false,
-        isRender: false,
-        pos: [750, 200],
-        text: "test slider",
-        min: 0,
-        value: 0,
-        max: document.querySelector("canvas").height
-    }))
-
     UIManagerInstance.addElement("TextInput", new UITextInput({
         manager: UIManagerInstance,
         isActive: true,
@@ -64,7 +53,34 @@ function start() {
         placeholder: "Test TI",
         maxSymbols: 5,
         value: "123",
+    }))*/
+
+    UIManagerInstance.addElement("Container", new UIContainer({
+        manager: UIManagerInstance,
+        isActive: true,
+        isRender: true,
+        pos: [50, 50],
+        name: "Test Container"
     }))
+    UIManagerInstance.getElement("Container").addElement("ButtonMinus", new UIButton({
+        manager: UIManagerInstance,
+        isActive: true,
+        isRender: true,
+        onClick: (elem) => {
+            
+        },
+        text: "-1"
+    }));
+
+    UIManagerInstance.getElement("Container").addElement("ButtonPlus", new UIButton({
+        manager: UIManagerInstance,
+        isActive: true,
+        isRender: true,
+        onClick: (elem) => {
+
+        },
+        text: "Test button to test width"
+    }));
 
     document.querySelector("canvas").onmousemove = (e) => {
         UIManagerInstance.onmousemove([e.clientX, e.clientY]);
@@ -83,37 +99,11 @@ function start() {
     }
 }
 
-let square = {
-    pos: [document.querySelector("canvas").width / 2, 0],
-    size: [50,50],
-
-    update(gravity) {
-        this.pos[1] += gravity;
-
-        if (this.pos[1] > document.querySelector("canvas").height)
-            this.pos[1] = 0;
-    },
-
-    render(ctx) {
-        ctx.fillRect(this.pos[0], this.pos[1], this.size[0], this.size[1])
-    }
-}
-
 function update() {
-    document.querySelector("canvas").getContext("2d").clearRect(0, 0, document.querySelector("canvas").width, document.querySelector("canvas").height)
-    document.querySelector("canvas").getContext("2d").fillStyle = "black";
-    document.querySelector("canvas").getContext("2d").fillRect(0, 0, document.querySelector("canvas").width, document.querySelector("canvas").height)
+    document.querySelector("canvas").getContext("2d").clearRect(0, 0, document.querySelector("canvas").width, document.querySelector("canvas").height);
 
     UIManagerInstance.update();
-
-    //UIManagerInstance.getElement("Slider").setValue(ticks % 9999);
-
     UIManagerInstance.render();
-
-    document.querySelector("canvas").getContext("2d").fillStyle = "red";
-    square.update(UIManagerInstance.getElement("Slider").getValue());
-    UIManagerInstance.getElement("SliderHeight").setValue(square.pos[1]);
-    square.render(document.querySelector("canvas").getContext("2d"));
 }
 
 let HUD_COLORS = {

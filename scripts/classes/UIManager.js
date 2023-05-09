@@ -17,6 +17,8 @@ class UIManager {
         this._lastUpdate = Date.now();
 
         this.defaultFont = "arial";
+
+        this.mousePos = false;
     }
 
     addElement(id, element) {
@@ -40,7 +42,9 @@ class UIManager {
 
     render() {
         for (let element of this._elements) {
-            element[1].render(this._canvas, this._ctx);
+            element[1].render({
+                ctx: this._ctx
+            });
         }
     }
 
@@ -101,6 +105,8 @@ class UIManager {
         for (let element of this._elements) {
             element[1].checkHover(pos, this._ctx);
         }
+
+        this.mousePos = pos;
     }
 
     onkeydown(key, code) {
