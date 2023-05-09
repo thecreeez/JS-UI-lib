@@ -20,7 +20,7 @@ class UIElement {
 
     update(deltaTime) {
         if (this.animationState < 1)
-            this.animationState += 0.01 * deltaTime;
+            this.animationState += 0.8 * deltaTime / 1000;
 
         if (this.animationState > 1) {
             this.animationState = 1;
@@ -34,7 +34,9 @@ class UIElement {
         if (this.isInCollision(pos, ctx)) {
             if (!this.isHover) {
                 this.animationState = 0;
-                this.onHover(this, pos);
+
+                if (this.onHover)
+                    this.onHover(this, pos);
             }
 
             this.isHover = true;
@@ -84,7 +86,19 @@ class UIElement {
         return this._manager;
     }
 
+    setContainer(container) {
+        this._container = container;
+    }
+
+    getContainer() {
+        return this._container;
+    }
+
     isSelected() {
         return this == this.getManager().getSelectedElem()
+    }
+
+    onmouseup(pos) {
+        this.isClicked = false;
     }
 }

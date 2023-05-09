@@ -5,3 +5,5 @@
 2. Add container for elements.
 3. New element: Console
 4. New element: Graphic
+
+Пофиксить hover click ивенты в отдельный метод

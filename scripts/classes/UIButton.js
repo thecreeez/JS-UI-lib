@@ -4,7 +4,7 @@ class UIButton extends UIElement {
     static FILL_INACTIVE = [0, 0, 20];
 
     static getMinWidth() {
-        return 50;
+        return 250;
     }
 
     constructor( { manager, pos, text, onClick, isActive, isRender } ) {

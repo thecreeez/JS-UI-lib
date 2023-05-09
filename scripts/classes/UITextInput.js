@@ -44,33 +44,37 @@ class UITextInput extends UIElement {
         })
     }
 
-    render(canvas, ctx) {
-        ctx.font = this._defaultFontSize + "px arial";
-
+    render({ ctx, pos }) {
+        this.getManager().setFont(this._defaultFontSize, "arial");
         let size = this._getSize();
-        this._manager.setFillColor(this._getColor())
+        this._manager.setFillColor(this._getColor());
 
-        ctx.fillRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1]);
+        let renderingPos = this._pos;
+
+        if (pos)
+            renderingPos = pos;
+
+        ctx.fillRect(renderingPos[0] - size[0] / 2, renderingPos[1] - size[1], size[0], size[1]);
 
         if (this.isHover || this.isSelected()) {
-            this.renderSelected(ctx);
+            this.renderSelected(ctx, renderingPos);
         }
 
         if (this.value.length < 1) {
             this._manager.setFillColor("rgba(0,0,0,0.5)");
-            ctx.fillText(this._placeholder, this._pos[0] - size[0] / 2 + 5, this._pos[1] - this._defaultFontSize * 0.3);
+            ctx.fillText(this._placeholder, renderingPos[0] - size[0] / 2 + 5, renderingPos[1] - this._defaultFontSize * 0.3);
         } else {
             this._manager.setFillColor("rgba(0,0,0,1)");
-            ctx.fillText(this.value, this._pos[0] - size[0] / 2 + 5, this._pos[1] - this._defaultFontSize * 0.3);
+            ctx.fillText(this.value, renderingPos[0] - size[0] / 2 + 5, renderingPos[1] - this._defaultFontSize * 0.3);
         }
     }
 
-    renderSelected(ctx) {
+    renderSelected(ctx, renderingPos) {
         let size = this._getSize();
 
         this._manager.setStrokeColor(this._getStrokeColor());
         this._manager.setStrokeWidth(3 * this.animationState);
-        ctx.strokeRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1])
+        ctx.strokeRect(renderingPos[0] - size[0] / 2, renderingPos[1] - size[1], size[0], size[1])
     }
 
     _getColor() {
@@ -116,9 +120,9 @@ class UITextInput extends UIElement {
     }
 
     _getSize() {
-        let textInputWidth = this._defaultFontSize * 1.3;
+        let textInputHeight = this._defaultFontSize * 1.3;
 
-        return [UITextInput.getMinWidth(), textInputWidth];
+        return [UITextInput.getMinWidth(), textInputHeight];
     }
 
     isWhitelistEnabled() {

@@ -27,6 +27,8 @@ class UIManager {
         }
 
         this._elements.set(id, element);
+
+        return element;
     }
 
     hasElement(id) {
@@ -38,6 +40,10 @@ class UIManager {
 
     getElement(id) {
         return this._elements.get(id);
+    }
+
+    getContext() {
+        return this._ctx;
     }
 
     render() {
@@ -97,7 +103,7 @@ class UIManager {
 
     onmouseup(pos) {
         for (let element of this._elements) {
-            element[1].isClicked = false;
+            element[1].onmouseup(pos);
         }
     }
 

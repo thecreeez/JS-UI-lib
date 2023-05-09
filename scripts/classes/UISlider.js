@@ -1,9 +1,11 @@
 class UISlider extends UIElement {
     static EMPTY_COLOR = [0, 0, 51];
     static FULL_COLOR = [0, 51, 204];
+    
+    static LINE_WIDTH = 10;
 
     static getMinWidth() {
-        return 200;
+        return 250;
     }
 
     constructor({ manager, pos, text, isActive, isRender, min, max, value }) {
@@ -19,7 +21,7 @@ class UISlider extends UIElement {
         this.max = max;
 
         this._text = text;
-        this._defaultFontSize = 20;
+        this._defaultFontSize = 15;
 
         this.onClick = (elem) => {
             elem.getManager().setSelectedElem(elem);
@@ -41,26 +43,34 @@ class UISlider extends UIElement {
         })
     }
 
-    render(canvas, ctx) {
+    render({ ctx, pos }) {
         if (!this.isRender)
             return;
+
+        let renderingPos = this._pos;
+
+        if (pos)
+            renderingPos = pos;
 
         this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
         let size = this._getSize(ctx);
 
-        ctx.fillStyle = `rgb(${UISlider.EMPTY_COLOR[0]},${UISlider.EMPTY_COLOR[1]},${UISlider.EMPTY_COLOR[2]})`;
+        this._manager.setFillColor(`rgb(${UISlider.EMPTY_COLOR[0]},${UISlider.EMPTY_COLOR[1]},${UISlider.EMPTY_COLOR[2]})`)
+        ctx.fillRect(renderingPos[0] - size[0] / 2, renderingPos[1] - size[1], size[0], size[1]);
 
-        ctx.fillRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0], size[1]);
+        this._manager.setFillColor(`rgb(${UISlider.FULL_COLOR[0]},${UISlider.FULL_COLOR[1]},${UISlider.FULL_COLOR[2]})`);
+        ctx.fillRect(renderingPos[0] - size[0] / 2, renderingPos[1] - size[1], size[0] * this.getValueOffset(), size[1]);
 
-        ctx.fillStyle = `rgb(${UISlider.FULL_COLOR[0]},${UISlider.FULL_COLOR[1]},${UISlider.FULL_COLOR[2]})`;
-        ctx.fillRect(this._pos[0] - size[0] / 2, this._pos[1] - size[1], size[0] * this.getValueOffset(), size[1]);
+        this._manager.setFillColor(`rgba(200,200,200,1)`);
 
-        ctx.fillStyle = `white`;
-        ctx.fillText(this.min, this._pos[0] - size[0] / 2 - this._defaultFontSize / 4, this._pos[1] - size[1] - 5);
-        ctx.fillText(this.max, this._pos[0] + size[0] / 2 - this._defaultFontSize / 4, this._pos[1] - size[1] - 5);
+        if (this.isSelected())
+            this._manager.setFillColor(`white`);
+
+        ctx.fillText(this.min, renderingPos[0] - size[0] / 2 - this._defaultFontSize / 4, renderingPos[1] - size[1] - 5);
+        ctx.fillText(this.max, renderingPos[0] + size[0] / 2 - this._defaultFontSize / 4, renderingPos[1] - size[1] - 5);
 
         if (this.value != this.min && this.value != this.max)
-            ctx.fillText(Math.round(this.value * 100) / 100, this._pos[0] - size[0] / 2 + size[0] * this.getValueOffset() - this._defaultFontSize / 2   , this._pos[1] - size[1] - 5);
+            ctx.fillText(Math.round(this.value * 100) / 100, renderingPos[0] - size[0] / 2 + size[0] * this.getValueOffset() - this._defaultFontSize / 2   , renderingPos[1] - size[1] - 5);
     }
 
     update(deltaTime) {
@@ -70,32 +80,39 @@ class UISlider extends UIElement {
             this.getManager().setSelectedElem(null)
     }
 
-    checkHover(pos) {
+    checkHover(pos, ctx) {
         if (this.isSelected()) {
-            let size = this._getSize();
-
-            let startWidth = (this._pos[0] - size[0] / 2);
-
-            if (pos[0] - startWidth < 0) {
-                this.value = this.min;
-                return;
-            }
-            
-            let valueOffset = (pos[0] - startWidth) / size[0];
-
-            if (valueOffset > 1) {
-                this.value = this.max;
-                return;
-            }
-
-            this.value = valueOffset * (this.max - this.min) + this.min;
+            this.hoverMove({pos, ctx});
         }
     }
 
-    // valueOffset == (this.value - this.min) / (this.max - this.min)
-    // value = 
+    hoverMove({ pos, ctx, container }) {
+        let size = this._getSize(ctx);
 
-    //(this.value - this.min) / (this.max - this.min)
+        let startPos;
+
+        if (container) {
+            startPos = container._pos[0] + UIContainer.DEFAULT_MARGIN_BETWEEN_ELEMENTS + size[0] / 2;
+        } else {
+            startPos = this._pos[0]
+        }
+
+        let startWidth = (startPos - size[0] / 2);
+
+        if (pos[0] - startWidth < 0) {
+            this.setValue(this.min);
+            return;
+        }
+
+        let valueOffset = (pos[0] - startWidth) / size[0];
+
+        if (valueOffset > 1) {
+            this.setValue(this.max);
+            return;
+        }
+
+        this.setValue(valueOffset * (this.max - this.min) + this.min);
+    }
 
     getValueOffset() {
         return (this.value - this.min) / (this.max - this.min);
@@ -109,6 +126,9 @@ class UISlider extends UIElement {
 
         if (this.value < this.min)
             this.value = this.min;
+
+        if (this.onchange)
+            this.onchange(this, this.value);
     }
 
     getValue() {
@@ -116,6 +136,10 @@ class UISlider extends UIElement {
     }
 
     _getSize(ctx) {
-        return [UISlider.getMinWidth(), 10];
+        return [UISlider.getMinWidth(), UISlider.LINE_WIDTH];
+    }
+
+    _getFullSize(ctx) {
+        return [UISlider.getMinWidth(), UISlider.LINE_WIDTH + 5 + this._defaultFontSize];
     }
 }
