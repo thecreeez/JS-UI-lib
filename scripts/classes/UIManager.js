@@ -38,6 +38,10 @@ class UIManager {
         return false;
     }
 
+    removeElement(id) {
+        return this._elements.delete(id);
+    }
+
     getElement(id) {
         return this._elements.get(id);
     }

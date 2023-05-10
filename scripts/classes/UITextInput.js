@@ -15,6 +15,10 @@ class UITextInput extends UIElement {
         })
 
         this.value = value;
+
+        if (!this.value)
+            this.value = "";
+
         this._placeholder = placeholder;
         this._defaultFontSize = 15;
         this._defaultWidth = UITextInput.getMinWidth();

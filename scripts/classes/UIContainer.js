@@ -78,8 +78,6 @@ class UIContainer extends UIElement {
 
         this._renderContainer(ctx, renderingPos);
         this._renderElements(ctx, renderingPos);
-
-        this._name = Math.floor(Math.random() * 1000000);
     }
 
     _renderContainer(ctx, renderingPos) {
@@ -173,7 +171,18 @@ class UIContainer extends UIElement {
         let size = this.getElementsSize(ctx);
 
         let width = Math.max(...size[0]);
-        let height = size[1].reduce((a, b) => a + b);
+
+        this.getManager().setFont(UIContainer.HEADER_HEIGHT - 5, "arial");
+        let nameWidth = ctx.measureText(this._name).width;
+
+        if (nameWidth + UIContainer.HEADER_HEIGHT > width)
+            width = nameWidth + UIContainer.HEADER_HEIGHT * 2;
+
+        let height;
+        if (size[1].length > 0)
+            height = size[1].reduce((a, b) => a + b);
+        else   
+            height = 0;
 
         height += UIContainer.HEADER_HEIGHT;
 
