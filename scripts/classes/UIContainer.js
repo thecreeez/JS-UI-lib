@@ -44,6 +44,12 @@ class UIContainer extends UIElement {
 
         if (elements)
             this._elements = elements;
+
+        this._pin = null;
+    }
+
+    pinTo(container) {
+        this._pin = container;
     }
 
     addElement(id, element) {
@@ -217,6 +223,10 @@ class UIContainer extends UIElement {
 
     update(deltaTime) {
         super.update(deltaTime);
+
+        if (this._pin) {
+            this._pos = [this._pin._pos[0], this._pin._pos[1] + this._pin._getSize(this.getManager().getContext())[1] + UIContainer.DEFAULT_MARGIN_BETWEEN_ELEMENTS];
+        }
 
         for (let element of this._elements) {
             element[1].update(deltaTime);
