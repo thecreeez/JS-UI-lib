@@ -31,6 +31,10 @@ class UIButton extends UIElement {
         })
     }
 
+    setText(text) {
+        this._text = text;
+    }
+
     render({ ctx, pos }) {
         this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
         this._manager.setFillColor(this._getColor())

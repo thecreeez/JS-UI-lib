@@ -77,7 +77,7 @@ class UITextInput extends UIElement {
         let size = this._getSize();
 
         this._manager.setStrokeColor(this._getStrokeColor());
-        this._manager.setStrokeWidth(3 * this.animationState);
+        this._manager.setStrokeWidth(2 * this.animationState);
         ctx.strokeRect(renderingPos[0] - size[0] / 2, renderingPos[1] - size[1], size[0], size[1])
     }
 

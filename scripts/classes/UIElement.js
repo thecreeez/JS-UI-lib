@@ -32,7 +32,7 @@ class UIElement {
             return this.isHover = false;
 
         if (this.isInCollision(pos, ctx)) {
-            if (!this.isHover) {
+            if (!this.isHover && !this.isSelected()) {
                 this.animationState = 0;
 
                 if (this.onHover)

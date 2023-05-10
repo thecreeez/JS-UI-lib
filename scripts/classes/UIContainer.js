@@ -68,6 +68,10 @@ class UIContainer extends UIElement {
         return this._elements.get(id);
     }
 
+    removeElement(id) {
+        return this._elements.delete(id);
+    }
+
     render({ctx, pos}) {
         let renderingPos = [this._pos[0], this._pos[1]];
         let size = this._getSize(ctx);
