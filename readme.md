@@ -1,9 +1,22 @@
 ## Starting working to UI Lib on JavaScript.
 
-### To-do List:
-1. Realise starting elements (Render/Customizable/Settings)
-2. Add container for elements.
-3. New element: Console
-4. New element: Graphic
+### Description
+Библиотека позволяет сделать графический интерфейс для многих веб-приложений с использованием canvas'а.
+Имеются:
+1. Кнопки (UIButton)
+2. Надписи (UILabel)
+3. Ползунок (UISlider)
+4. Поле для ввода текста (UITextInput)
+5. Контейнер (Который может содержать все предыдущие элементы) (UIContainer)
 
-Пофиксить hover click ивенты в отдельный метод
+
+### Using in your projects.
+Чтоб использовать библиотеку в своем проекте, нужно создать экземпляр класса "UIManager" (Принимает в себя значение canvas). Также требуется подключить следующие ивенты для полной работоспособности:
+1. onmousemove => (Принимает в себя массив из позиций мыши)
+2. onmousedown => (Принимает в себя массив из позиций мыши)
+3. onmouseup => (Принимает в себя массив из позиций мыши)
+4. onkeydown => (key, code)
+
+За отображение отвечает метод render, за обновление - update.
+
+TBA...

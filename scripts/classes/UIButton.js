@@ -1,4 +1,7 @@
 class UIButton extends UIElement {
+    /**
+     * Default colours
+     */
     static FILL_DEFAULT = [0, 0, 51];
     static FILL_HOVER = [0, 51, 204];
     static FILL_INACTIVE = [0, 0, 20];
@@ -7,6 +10,14 @@ class UIButton extends UIElement {
         return 250;
     }
 
+    /**
+     * [UIManager] manager - главный класс
+     * [array(num,num)] pos - Позиция кнопки (Необязательно, если находится в контейнере)
+     * [String] text - Надпись на кнопке
+     * [Function] onClick - Функция, которая вызывается при нажатии на кнопку (2 аргумента, element и pos)
+     * [Boolean] isActive - Включена ли кнопка
+     * [Boolean] isRender - Нужно ли кнопку отрисовывать
+     */
     constructor( { manager, pos, text, onClick, isActive, isRender } ) {
         super({
             manager: manager,
@@ -20,6 +31,14 @@ class UIButton extends UIElement {
         this._defaultFontSize = 15;
     }
 
+    /**
+     * Упрощенное создание кнопки
+     * 
+     * [UIManager] manager - главный класс
+     * [array(num,num)] pos - Позиция кнопки (Необязательно, если находится в контейнере)
+     * [String] text - Надпись на кнопке
+     * [Function] onClick - Функция, которая вызывается при нажатии на кнопку (2 аргумента, element и pos)
+     */
     static createDefault({ manager, pos, text, onClick}) {
         return new UIButton({
             manager: manager,
@@ -31,10 +50,21 @@ class UIButton extends UIElement {
         })
     }
 
+    /**
+     * Меняет текст кнопки на новый
+     * 
+     * [String] text - Новый текст кнопки
+     */
     setText(text) {
         this._text = text;
     }
 
+    /**
+     * Отрисовывает кнопку
+     * 
+     * [CanvasContext] ctx - Контекст, в котором надо отрисовать
+     * [array(num,num)] pos - Позиция кнопки (Необязательно)
+     */
     render({ ctx, pos }) {
         this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
         this._manager.setFillColor(this._getColor())
@@ -57,6 +87,13 @@ class UIButton extends UIElement {
         ctx.fillText(this._text, renderingPos[0] - ctx.measureText(this._text).width / 2 + posOffset[0], renderingPos[1] - this._defaultFontSize * 0.3 + posOffset[1]);
     }
 
+    /**
+     * Возвращает размеры кнопки
+     * 
+     * [CanvasContext] ctx - Контекст
+     * 
+     * Return: [num, num]
+     */
     _getSize(ctx) {
         this._manager.setFont(this._defaultFontSize, this._manager.defaultFont);
 
@@ -69,6 +106,9 @@ class UIButton extends UIElement {
         return [buttonWidth, buttonHeight];
     }
 
+    /**
+     * Возвращает цвет заднего фона кнопки в зависимости от состояния
+     */
     _getColor() {
         let r = UIButton.FILL_INACTIVE[0];
         let g = UIButton.FILL_INACTIVE[1];
