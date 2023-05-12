@@ -99,14 +99,11 @@ class UIContainer extends UIElement {
 
         if (UIContainer.IS_HEADER_ON) {
             this.getManager().setFillColor(this.getHeaderColor())
-            ctx.fillRect(renderingPos[0], renderingPos[1], size[0] - UIContainer.HEADER_HEIGHT, UIContainer.HEADER_HEIGHT);
+            ctx.fillRect(renderingPos[0], renderingPos[1], size[0], UIContainer.HEADER_HEIGHT);
 
             this.getManager().setFillColor("white");
             this.getManager().setFont(UIContainer.HEADER_HEIGHT - 5, "arial");
             ctx.fillText(this._name, renderingPos[0] + 5, renderingPos[1] + UIContainer.HEADER_HEIGHT - 5);
-
-            this.getManager().setFillColor("red");
-            ctx.fillRect(renderingPos[0] + size[0] - UIContainer.HEADER_HEIGHT, renderingPos[1], UIContainer.HEADER_HEIGHT, UIContainer.HEADER_HEIGHT);
         }
     }
 

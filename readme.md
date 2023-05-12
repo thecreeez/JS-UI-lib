@@ -1,4 +1,4 @@
-## Starting working to UI Lib on JavaScript.
+## TCZ UI Lib
 
 ### Description
 Библиотека позволяет сделать графический интерфейс для многих веб-приложений с использованием canvas'а.

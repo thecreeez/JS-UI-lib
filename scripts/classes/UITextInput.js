@@ -3,7 +3,7 @@ class UITextInput extends UIElement {
     static ACTIVE_STROKE = [0, 51, 204];
 
     static getMinWidth() {
-        return 200;
+        return 250;
     }
 
     constructor({ manager, pos, placeholder, isActive, isRender, maxSymbols, blackList, whiteList, value }) {
