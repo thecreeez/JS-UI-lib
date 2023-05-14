@@ -33,14 +33,12 @@ class UIContainer extends UIElement {
                 if (element.onClick)
                     element.onClick(element, pos);
             },
-            onHover: (elem, pos) => {
-                //console.log(elem, pos)
-            }
         })
         this._elements = new Map();
         this._name = name;
 
         this._renderType = "leftTop";
+        this._type = "container";
 
         if (elements)
             this._elements = elements;
@@ -163,6 +161,10 @@ class UIContainer extends UIElement {
         }
 
         element.isHover = true;
+    }
+
+    onHover(element, pos) {
+        this.checkHover(pos, this.getManager().getContext());
     }
 
     hoverMove(pos) {
